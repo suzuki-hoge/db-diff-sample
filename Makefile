@@ -1,3 +1,6 @@
+run:
+	@cargo run
+
 up:
 	@docker compose up --detach
 
