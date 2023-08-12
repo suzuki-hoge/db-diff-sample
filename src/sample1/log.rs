@@ -8,7 +8,7 @@ pub fn log_create(conn: &mut Conn) {
 
 pub fn log_insert(conn: &mut Conn, operation: &str) {
     let id = Uuid::new_v4().to_string();
-    conn.prep_exec("insert into log ( id, operation ) values ( ?, ? )", (&id, operation)).unwrap();
+    let _ = conn.prep_exec("insert into log ( id, operation ) values ( ?, ? )", (&id, operation));
 }
 
 pub fn log_drop(conn: &mut Conn) {

@@ -31,7 +31,10 @@ fn main() -> io::Result<()> {
                     "メッセージ送信" => sample1::chat(),
                     "API トークン生成" => sample1::generate_token(),
                     "API トークン無効化" => sample1::delete_token(),
-                    "接続情報確認" => sample1::info(),
+                    "接続情報確認" => {
+                        sample1::info();
+                        break
+                    },
                     "プログラム終了" => break,
                     _ => unreachable!(),
                 }
@@ -105,7 +108,10 @@ fn main() -> io::Result<()> {
                         sample2::arrive(n * 10);
                         sample2::arrive(n * 10);
                     }
-                    "接続情報確認" => sample2::info(),
+                    "接続情報確認" => {
+                        sample2::info();
+                        break
+                    },
                     "プログラム終了" => break,
                     _ => unreachable!(),
                 }

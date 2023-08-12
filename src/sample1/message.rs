@@ -14,11 +14,11 @@ pub fn message_create(conn: &mut Conn) {
 pub fn message_insert(conn: &mut Conn, user_id: usize) {
     let ws: Vec<String> = Words(5..20).fake();
 
-    conn.prep_exec("insert into message ( user_id, value ) values ( ?, ? )", (user_id, ws.join(" "))).unwrap();
+    let _ = conn.prep_exec("insert into message ( user_id, value ) values ( ?, ? )", (user_id, ws.join(" ")));
 }
 
 pub fn message_delete(conn: &mut Conn, user_id: usize) {
-    conn.prep_exec("delete from message where user_id = ?", vec![user_id]).unwrap();
+    let _ = conn.prep_exec("delete from message where user_id = ?", vec![user_id]);
 }
 
 pub fn message_drop(conn: &mut Conn) {

@@ -1,6 +1,5 @@
 use fake::faker::name::en::Name;
 use fake::Fake;
-
 use mysql::{from_row, Conn};
 
 pub fn user_create(conn: &mut Conn) {
@@ -11,18 +10,18 @@ pub fn user_insert(conn: &mut Conn) {
     let name: String = Name().fake();
     let age: usize = (1..100).fake();
 
-    conn.prep_exec("insert into user ( name, age ) values ( ?, ? )", (name, age)).unwrap();
+    let _ = conn.prep_exec("insert into user ( name, age ) values ( ?, ? )", (name, age));
 }
 
 pub fn user_update(conn: &mut Conn, id: usize) {
     let name: String = Name().fake();
     let age: usize = (1..100).fake();
 
-    conn.prep_exec("update user set name = ?, age = ?, updated_at = now() where id = ?", (name, age, id)).unwrap();
+    let _ = conn.prep_exec("update user set name = ?, age = ?, updated_at = now() where id = ?", (name, age, id));
 }
 
 pub fn user_delete(conn: &mut Conn, id: usize) {
-    conn.prep_exec("update user set deleted_at = now() where id = ?", vec![id]).unwrap();
+    let _ = conn.prep_exec("update user set deleted_at = now() where id = ?", vec![id]);
 }
 
 pub fn user_drop(conn: &mut Conn) {
@@ -31,7 +30,11 @@ pub fn user_drop(conn: &mut Conn) {
 
 pub fn user_ids(conn: &mut Conn, deleted: bool) -> Vec<usize> {
     let not = if deleted { "not " } else { "" };
-    conn.query(format!("select id from user where deleted_at is {not}null"))
+    match conn
+        .query(format!("select id from user where deleted_at is {not}null"))
         .map(|result| result.map(|x| x.unwrap()).map(from_row::<usize>).collect())
-        .unwrap()
+    {
+        Ok(x) => x,
+        Err(_) => vec![],
+    }
 }

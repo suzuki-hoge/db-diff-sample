@@ -11,11 +11,11 @@ pub fn token_insert(conn: &mut Conn, user_id: usize) {
     let value = Uuid::new_v4().to_string();
     let json = format!(r#"{{ "read": [{}], "write": [{}] }}"#, get_permission(), get_permission());
 
-    conn.prep_exec("insert into token ( user_id, value, permission ) values ( ?, ?, ? )", (user_id, value, json)).unwrap();
+    let _ = conn.prep_exec("insert into token ( user_id, value, permission ) values ( ?, ?, ? )", (user_id, value, json));
 }
 
 pub fn token_delete(conn: &mut Conn, user_id: usize) {
-    conn.prep_exec("delete from token where user_id = ?", vec![user_id]).unwrap();
+    let _ = conn.prep_exec("delete from token where user_id = ?", vec![user_id]);
 }
 
 pub fn token_drop(conn: &mut Conn) {
@@ -30,7 +30,11 @@ fn get_permission() -> String {
 
 pub fn token_ids(conn: &mut Conn, generated: bool) -> Vec<usize> {
     let not = if generated { "not " } else { "" };
-    conn.query(format!("select u.id from user u left outer join token t on u.id = t.user_id where t.user_id is {not}null"))
+    match conn
+        .query(format!("select u.id from user u left outer join token t on u.id = t.user_id where t.user_id is {not}null"))
         .map(|result| result.map(|x| x.unwrap()).map(from_row::<usize>).collect())
-        .unwrap()
+    {
+        Ok(x) => x,
+        Err(_) => vec![],
+    }
 }

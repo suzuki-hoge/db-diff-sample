@@ -26,14 +26,14 @@ pub fn ship_insert(conn: &mut Conn, count: usize) {
         .collect_vec();
     let ps = (0..count).map(|_| "( ?, ?, ?, ?, ?, ?, ?, ?, ? )").join(", ");
 
-    conn.prep_exec(format!("insert into ship ( code, status, company, post, building, street, city, state, phone ) values {ps}"), vs).unwrap();
+    let _ = conn.prep_exec(format!("insert into ship ( code, status, company, post, building, street, city, state, phone ) values {ps}"), vs);
 }
 
 pub fn ship_update(conn: &mut Conn, ids: Vec<usize>) {
     let vs = ids.iter().flat_map(|id| vec![id.to_string(), "arrived".to_string()]).collect_vec();
     let ps = (0..ids.len()).map(|_| "( ?, ?, now() )").join(", ");
 
-    conn.prep_exec(format!("insert into ship ( id, status, arrived_at ) values {ps} on duplicate key update id = values ( id ), status = values ( status ), arrived_at = values ( arrived_at )"), vs).unwrap();
+    let _ = conn.prep_exec(format!("insert into ship ( id, status, arrived_at ) values {ps} on duplicate key update id = values ( id ), status = values ( status ), arrived_at = values ( arrived_at )"), vs);
 }
 
 pub fn ship_drop(conn: &mut Conn) {
@@ -41,5 +41,8 @@ pub fn ship_drop(conn: &mut Conn) {
 }
 
 pub fn ship_ids(conn: &mut Conn) -> Vec<usize> {
-    conn.query("select id from ship where status = 'shipping'").map(|result| result.map(|x| x.unwrap()).map(from_row::<usize>).collect()).unwrap()
+    match conn.query("select id from ship where status = 'shipping'").map(|result| result.map(|x| x.unwrap()).map(from_row::<usize>).collect()) {
+        Ok(x) => x,
+        Err(_) => vec![],
+    }
 }

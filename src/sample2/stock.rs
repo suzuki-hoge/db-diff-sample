@@ -22,7 +22,7 @@ pub fn stock_insert(conn: &mut Conn, count: usize) {
         .collect_vec();
     let ps = (0..count).map(|_| "( ?, ?, ?, ?, ? )").join(", ");
 
-    conn.prep_exec(format!("insert into stock ( id, name, code, price, count ) values {ps}"), vs).unwrap();
+    let _ = conn.prep_exec(format!("insert into stock ( id, name, code, price, count ) values {ps}"), vs);
 }
 
 pub fn stock_update(conn: &mut Conn, ids: Vec<&String>) {
@@ -35,8 +35,8 @@ pub fn stock_update(conn: &mut Conn, ids: Vec<&String>) {
         .collect_vec();
     let ps = (0..ids.len()).map(|_| "( ?, ? )").join(", ");
 
-    conn.prep_exec(format!("insert into stock ( id, count ) values {ps} on duplicate key update id = values ( id ), count = values ( count )"), vs)
-        .unwrap();
+    let _ = conn
+        .prep_exec(format!("insert into stock ( id, count ) values {ps} on duplicate key update id = values ( id ), count = values ( count )"), vs);
 }
 
 pub fn stock_drop(conn: &mut Conn) {
@@ -44,5 +44,8 @@ pub fn stock_drop(conn: &mut Conn) {
 }
 
 pub fn stock_ids(conn: &mut Conn) -> Vec<String> {
-    conn.query("select id from stock").map(|result| result.map(|x| x.unwrap()).map(from_row::<String>).collect()).unwrap()
+    match conn.query("select id from stock").map(|result| result.map(|x| x.unwrap()).map(from_row::<String>).collect()) {
+        Ok(x) => x,
+        Err(_) => vec![],
+    }
 }
