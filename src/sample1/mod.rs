@@ -85,13 +85,20 @@ pub fn chat() {
     }
 }
 
+pub fn info() {
+    println!("{}", get_url());
+}
+
 fn create_connection() -> Conn {
-    let url = "mysql://user:password@localhost:13306/sample1";
-    let opt = Opts::from_url(url).unwrap();
+    let opt = Opts::from_url(get_url()).unwrap();
     let builder = OptsBuilder::from_opts(opt);
     let manager = MysqlConnectionManager::new(builder);
     match manager.connect() {
         Ok(x) => x,
         Err(_) => panic!("データベースに接続できませんでした、コンテナが起動しているか確認してください"),
     }
+}
+
+fn get_url() -> &'static str {
+    "mysql://user:password@localhost:13306/sample1"
 }
