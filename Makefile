@@ -1,6 +1,10 @@
 run:
 	@cargo run
 
+build:
+	@cargo clean
+	@cargo build --release
+
 up:
 	@docker compose up --detach
 
