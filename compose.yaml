@@ -1,6 +1,6 @@
 services:
   db1:
-    image: mysql:8.0
+    build: ./docker/mysql
     ports:
       - 13306:3306
     environment:
@@ -9,7 +9,7 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_DATABASE: sample1
   db2:
-    image: mysql:8.0
+    build: ./docker/mysql
     ports:
       - 23306:3306
     environment:
