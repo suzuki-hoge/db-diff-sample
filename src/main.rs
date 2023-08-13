@@ -33,8 +33,8 @@ fn main() -> io::Result<()> {
                     "API トークン無効化" => sample1::delete_token(),
                     "接続情報確認" => {
                         sample1::info();
-                        break
-                    },
+                        break;
+                    }
                     "プログラム終了" => break,
                     _ => unreachable!(),
                 }
@@ -66,52 +66,20 @@ fn main() -> io::Result<()> {
                     "初期化" => sample2::init(),
                     "入庫 ( 1000 件 )" => sample2::warehousing(n),
                     "入庫 ( 10000 件 )" => sample2::warehousing(n * 10),
-                    "入庫 ( 50000 件 )" => {
-                        sample2::warehousing(n * 10);
-                        sample2::warehousing(n * 10);
-                        sample2::warehousing(n * 10);
-                        sample2::warehousing(n * 10);
-                        sample2::warehousing(n * 10);
-                    }
+                    "入庫 ( 50000 件 )" => sample2::warehousing(n * 50),
                     "在庫数更新 ( 1000 件 )" => sample2::count_up(n),
                     "在庫数更新 ( 10000 件 )" => sample2::count_up(n * 10),
-                    "在庫数更新 ( 50000 件 )" => {
-                        sample2::count_up(n * 10);
-                        sample2::count_up(n * 10);
-                        sample2::count_up(n * 10);
-                        sample2::count_up(n * 10);
-                        sample2::count_up(n * 10);
-                    }
+                    "在庫数更新 ( 50000 件 )" => sample2::count_up(n * 50),
                     "発送 ( 1000 件 )" => sample2::ship(n),
-                    "発送 ( 10000 件 )" => {
-                        sample2::ship(n * 5);
-                        sample2::ship(n * 5);
-                    }
-                    "発送 ( 50000 件 )" => {
-                        sample2::ship(n * 5);
-                        sample2::ship(n * 5);
-                        sample2::ship(n * 5);
-                        sample2::ship(n * 5);
-                        sample2::ship(n * 5);
-                        sample2::ship(n * 5);
-                        sample2::ship(n * 5);
-                        sample2::ship(n * 5);
-                        sample2::ship(n * 5);
-                        sample2::ship(n * 5);
-                    }
+                    "発送 ( 10000 件 )" => sample2::ship(n * 10),
+                    "発送 ( 50000 件 )" => sample2::ship(n * 50),
                     "着荷 ( 1000 件 )" => sample2::arrive(n),
                     "着荷 ( 10000 件 )" => sample2::arrive(n * 10),
-                    "着荷 ( 50000 件 )" => {
-                        sample2::arrive(n * 10);
-                        sample2::arrive(n * 10);
-                        sample2::arrive(n * 10);
-                        sample2::arrive(n * 10);
-                        sample2::arrive(n * 10);
-                    }
+                    "着荷 ( 50000 件 )" => sample2::arrive(n * 50),
                     "接続情報確認" => {
                         sample2::info();
-                        break
-                    },
+                        break;
+                    }
                     "プログラム終了" => break,
                     _ => unreachable!(),
                 }

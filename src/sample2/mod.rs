@@ -1,11 +1,13 @@
-use crate::sample2::ship::{ship_create, ship_drop, ship_ids, ship_insert, ship_update};
+use std::cmp::min;
+use std::sync::Arc;
+
 use itertools::Itertools;
 use mysql::{Conn, Opts, OptsBuilder};
-use r2d2::ManageConnection;
+use r2d2::{ManageConnection, Pool};
 use r2d2_mysql::MysqlConnectionManager;
 use rand::prelude::SliceRandom;
-use std::cmp::min;
 
+use crate::sample2::ship::{ship_create, ship_drop, ship_ids, ship_insert, ship_update};
 use crate::sample2::stock::{stock_create, stock_drop, stock_ids, stock_insert, stock_update};
 
 mod ship;
@@ -20,8 +22,7 @@ pub fn init() {
 }
 
 pub fn warehousing(count: usize) {
-    let mut conn = create_connection();
-    stock_insert(&mut conn, count);
+    stock_insert(create_pool(), count);
 }
 
 pub fn count_up(count: usize) {
@@ -31,13 +32,12 @@ pub fn count_up(count: usize) {
         let mut rng = rand::thread_rng();
         stock_ids.shuffle(&mut rng);
         let n = min(count, stock_ids.len());
-        stock_update(&mut conn, stock_ids.iter().take(n).collect_vec());
+        stock_update(create_pool(), stock_ids.iter().take(n).collect_vec());
     }
 }
 
 pub fn ship(count: usize) {
-    let mut conn = create_connection();
-    ship_insert(&mut conn, count);
+    ship_insert(create_pool(), count);
 }
 
 pub fn arrive(count: usize) {
@@ -47,12 +47,23 @@ pub fn arrive(count: usize) {
         let mut rng = rand::thread_rng();
         ship_ids.shuffle(&mut rng);
         let n = min(count, ship_ids.len());
-        ship_update(&mut conn, ship_ids.into_iter().take(n).collect_vec());
+        ship_update(create_pool(), ship_ids.into_iter().take(n).collect_vec());
     }
 }
 
 pub fn info() {
     println!("{}", get_url());
+}
+
+fn create_pool() -> Arc<Pool<MysqlConnectionManager>> {
+    let opt = Opts::from_url(get_url()).unwrap();
+    let builder = OptsBuilder::from_opts(opt);
+    let manager = MysqlConnectionManager::new(builder);
+    let _ = match manager.connect() {
+        Ok(x) => x,
+        Err(_) => panic!("データベースに接続できませんでした、コンテナが起動しているか確認してください"),
+    };
+    Arc::new(Pool::builder().build(manager).unwrap())
 }
 
 fn create_connection() -> Conn {
