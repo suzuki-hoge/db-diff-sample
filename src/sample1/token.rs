@@ -4,7 +4,11 @@ use mysql::{from_row, Conn};
 use uuid::Uuid;
 
 pub fn token_create(conn: &mut Conn) {
-    conn.prep_exec("create table token ( user_id int, value char(64), permission json, primary key (user_id) )", ()).unwrap();
+    conn.prep_exec(
+        "create table token ( user_id int, value char(64), permission json, created_at datetime default current_timestamp, primary key (user_id) )",
+        (),
+    )
+    .unwrap();
 }
 
 pub fn token_insert(conn: &mut Conn, user_id: usize) {

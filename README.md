@@ -52,7 +52,7 @@ $ docker compose down
 
 ### コマンドの準備
 
-[Releases](https://github.com/suzuki-hoge/db-diff-sample/releases) ページの [db-diff-sample](https://github.com/suzuki-hoge/db-diff-sample/releases/download/v1.1.0/db-diff-sample) をダウンロードして、コマンドラインで実行してください
+[Releases](https://github.com/suzuki-hoge/db-diff-sample/releases) ページの [db-diff-sample](https://github.com/suzuki-hoge/db-diff-sample/releases/download/v1.1.1/db-diff-sample) をダウンロードして、コマンドラインで実行してください
 
 ```
 $ cd path/to/download

@@ -11,7 +11,7 @@ use r2d2_mysql::MysqlConnectionManager;
 use rayon::prelude::*;
 
 pub fn ship_create(conn: &mut Conn) {
-    conn.prep_exec("create table ship ( id int auto_increment, code char(8), status enum ('shipping', 'arrived'), company char(64), post char(32), building char(64), street char(64), city char(64), state char(64), phone char(32), shipped_at datetime default current_timestamp, arrived_at datetime default null, primary key (id) )", ()).unwrap();
+    conn.prep_exec("create table ship ( id int auto_increment, code char(8), status enum ('shipping', 'arrived'), company char(64), post char(32), building char(64), street char(64), city char(64), state char(64), phone char(32), shipped_at datetime default current_timestamp, arrived_at datetime default null, updated_at datetime default current_timestamp, primary key (id) )", ()).unwrap();
 }
 
 pub fn ship_insert(pool: Arc<Pool<MysqlConnectionManager>>, count: usize) {

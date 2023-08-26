@@ -10,7 +10,7 @@ use rayon::prelude::*;
 use uuid::Uuid;
 
 pub fn stock_create(conn: &mut Conn) {
-    conn.prep_exec("create table stock ( id char(64), name char(64), code char(8), price int, count int, primary key (id) )", ()).unwrap();
+    conn.prep_exec("create table stock ( id char(64), name char(64), code char(8), price int, count int, updated_at datetime default current_timestamp, primary key (id) )", ()).unwrap();
 }
 
 pub fn stock_insert(pool: Arc<Pool<MysqlConnectionManager>>, count: usize) {
