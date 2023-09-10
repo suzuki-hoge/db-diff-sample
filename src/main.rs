@@ -4,9 +4,10 @@ use dialoguer::Select;
 
 mod sample1;
 mod sample2;
+mod sample3;
 
 fn main() -> io::Result<()> {
-    let samples = vec!["サンプル１ ( ユーザ管理 )", "サンプル２ ( バッチ処理 )"];
+    let samples = vec!["サンプル１ ( ユーザ管理 )", "サンプル２ ( バッチ処理 )", "サンプル３ ( 大量テーブル )"];
 
     match samples[Select::new().items(&samples).interact()?] {
         "サンプル１ ( ユーザ管理 )" => {
@@ -85,6 +86,27 @@ fn main() -> io::Result<()> {
                 }
             }
         }
+
+        "サンプル３ ( 大量テーブル )" => {
+            let actions = vec![
+                "初期化 ( 100 テーブル | 50 カラム | 100 行 )",
+                "接続情報確認",
+                "プログラム終了",
+            ];
+
+            loop {
+                match actions[Select::new().items(&actions).interact()?] {
+                    "初期化 ( 100 テーブル | 50 カラム | 100 行 )" => sample3::init(100, 50, 1000),
+                    "接続情報確認" => {
+                        sample3::info();
+                        break;
+                    }
+                    "プログラム終了" => break,
+                    _ => unreachable!(),
+                }
+            }
+        }
+
         _ => unreachable!(),
     }
 
